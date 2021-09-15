@@ -93,8 +93,20 @@ checkUsernameFree,  async (req, res, next) => {
     "message": "no session"
   }
  */
-  router.get('/logout', (req, res, next) => {
-    res.json('logout')
+  router.get('/logout', async (req, res, next) => {
+    if (req.session.user) {
+      req.session.destroy(error => {
+        if (error) {
+          next(error)
+        }
+        else {
+          res.json({ message: 'logged out'})
+        }
+      })
+    }
+    else {
+      next({ status: 200, message: 'no session' })
+    }
   })
 
  
